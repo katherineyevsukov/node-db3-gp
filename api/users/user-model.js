@@ -33,25 +33,38 @@ async function findPosts(user_id) {
   */
 }
 
-function find() {
-  return db("users");
-  /*
-    Improve so it resolves this structure:
+async function find() {
+  const rows = await db("users as u")//users is the left table
+  .leftJoin('posts as p', 'u.id', 'p.user_id')
+  .select('u.id as user_id', 'u.username')
+  .count('p.id as post_count')
+  .groupBy('u.id')
+  return rows
 
-    [
-        {
-            "user_id": 1,
-            "username": "lao_tzu",
-            "post_count": 6
-        },
-        {
-            "user_id": 2,
-            "username": "socrates",
-            "post_count": 3
-        },
-        etc
-    ]
-  */
+
+
+//   select u.id, u.username, count(p.contents)
+// from users as u
+// left join posts as p
+// on p.user_id = u.id
+// group by u.id
+//   /*
+    // Improve so it resolves this structure:
+
+    // [
+    //     {
+    //         "user_id": 1,
+    //         "username": "lao_tzu",
+    //         "post_count": 6
+    //     },
+    //     {
+    //         "user_id": 2,
+    //         "username": "socrates",
+    //         "post_count": 3
+    //     },
+    //     etc
+    // ]
+  
 }
 
 function findById(id) {
