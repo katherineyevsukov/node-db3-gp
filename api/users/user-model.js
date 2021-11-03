@@ -1,4 +1,4 @@
-const db = require('../../data/db-config.js')
+const db = require("../../data/db-config.js");
 
 module.exports = {
   findPosts,
@@ -6,13 +6,21 @@ module.exports = {
   findById,
   add,
   update,
-  remove
-}
+  remove,
+};
 
-function findPosts(user_id) {
+async function findPosts(user_id) {
+  const rows = await db("posts as p")
+    .join("users as u", "p.user_id", "u.id")
+    .select("p.id as post_id", "username", "contents");
+  return rows;
   /*
     Implement so it resolves this structure:
-
+   select
+       p.id as post_id, p.contents, u.username 
+    from posts as p
+    join users as u
+      on p.user_id = u.id
     [
       {
           "post_id": 10,
@@ -25,7 +33,7 @@ function findPosts(user_id) {
 }
 
 function find() {
-  return db('users')
+  return db("users");
   /*
     Improve so it resolves this structure:
 
@@ -46,7 +54,7 @@ function find() {
 }
 
 function findById(id) {
-  return db('users').where({ id }).first()
+  return db("users").where({ id }).first();
   /*
     Improve so it resolves this structure:
 
@@ -66,19 +74,19 @@ function findById(id) {
 
 function add(user) {
   // returns an array with new user id
-  return db('users').insert(user)
+  return db("users").insert(user);
 }
 
 function update(changes, id) {
-  return db('users')
+  return db("users")
     .where({ id })
     .update(changes)
-    .then(count => {
-      return findById(id)
-    })
+    .then((count) => {
+      return findById(id);
+    });
 }
 
 function remove(id) {
   // returns removed count
-  return db('users').where({ id }).del()
+  return db("users").where({ id }).del();
 }
