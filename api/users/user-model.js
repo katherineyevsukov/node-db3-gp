@@ -67,8 +67,29 @@ async function find() {
   
 }
 
-function findById(id) {
-  return db("users").where({ id }).first();
+async function findById(id) {
+  // return db("users").where({ id }).first();
+const rows = await db('users as u')
+.leftJoin('posts as p', 'p.user_id', '=', 'u.id')
+.select(
+  'u.id as user_id',
+  'contents',
+  'username',
+  'p.id as post_id'
+)
+.where('u.id', id)
+return rows
+
+//JAVASCRPT TIME
+
+// select 
+//     u.id as user_id,
+//     contents,
+//     username,
+//     p.id as post_id
+// from users u
+// left join posts p
+// on p.user_id = u.id
   /*
     Improve so it resolves this structure:
 
