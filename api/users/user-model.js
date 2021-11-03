@@ -13,7 +13,7 @@ async function findPosts(user_id) {
   const rows = await db("posts as p")
     .join("users as u", "p.user_id", "u.id")
     .select("p.id as post_id", "username", "contents")
-    .where('p.id', '=', user_id)
+    .where('u.id', '=', user_id)
   return rows;
   /*
     Implement so it resolves this structure:
