@@ -81,6 +81,22 @@ const rows = await db('users as u')
 return rows
 
 //JAVASCRPT TIME
+// let result = { posts: [] }
+
+// for (let post of rows) {
+//   //does result have user_id and username?
+//   //if not, put them there!
+//   if(!result.user_id) { 
+//     result.user_id = post.user_id
+//     result.username = post.username
+//   }
+//   result.posts.push({
+//     post_id: post.post_id,
+//     contents: post.contents
+//   })
+// }
+
+// return result
 
 // select 
 //     u.id as user_id,
