@@ -13,7 +13,7 @@ async function findPosts(user_id) {
   const rows = await db("posts as p")
     .join("users as u", "p.user_id", "u.id")
     .select("p.id as post_id", "username", "contents")
-    .where('u.id', '=', user_id)
+    .where("u.id", "=", user_id);
   return rows;
   /*
     Implement so it resolves this structure:
@@ -34,78 +34,80 @@ async function findPosts(user_id) {
 }
 
 async function find() {
-  const rows = await db("users as u")//users is the left table
-  .leftJoin('posts as p', 'u.id', 'p.user_id')
-  .select('u.id as user_id', 'u.username')
-  .count('p.id as post_count')
-  .groupBy('u.id')
-  return rows
+  const rows = await db("users as u") //users is the left table
+    .leftJoin("posts as p", "u.id", "p.user_id")
+    .select("u.id as user_id", "u.username")
+    .count("p.id as post_count")
+    .groupBy("u.id");
+  return rows;
 
+  //   select u.id, u.username, count(p.contents)
+  // from users as u
+  // left join posts as p
+  // on p.user_id = u.id
+  // group by u.id
+  //   /*
+  // Improve so it resolves this structure:
 
-
-//   select u.id, u.username, count(p.contents)
-// from users as u
-// left join posts as p
-// on p.user_id = u.id
-// group by u.id
-//   /*
-    // Improve so it resolves this structure:
-
-    // [
-    //     {
-    //         "user_id": 1,
-    //         "username": "lao_tzu",
-    //         "post_count": 6
-    //     },
-    //     {
-    //         "user_id": 2,
-    //         "username": "socrates",
-    //         "post_count": 3
-    //     },
-    //     etc
-    // ]
-  
+  // [
+  //     {
+  //         "user_id": 1,
+  //         "username": "lao_tzu",
+  //         "post_count": 6
+  //     },
+  //     {
+  //         "user_id": 2,
+  //         "username": "socrates",
+  //         "post_count": 3
+  //     },
+  //     etc
+  // ]
 }
 
 async function findById(id) {
   // return db("users").where({ id }).first();
-const rows = await db('users as u')
-.leftJoin('posts as p', 'p.user_id', '=', 'u.id')
-.select(
-  'u.id as user_id',
-  'contents',
-  'username',
-  'p.id as post_id'
-)
-.where('u.id', id)
-return rows
+  const rows = await db("users as u")
+    .leftJoin("posts as p", "p.user_id", "=", "u.id")
+    .select("u.id as user_id", "contents", "username", "p.id as post_id")
+    .where("u.id", id);
 
-//JAVASCRPT TIME
-// let result = { posts: [] }
+  //JAVASCRPT TIME
+  // let result = { posts: [] };
 
-// for (let post of rows) {
-//   //does result have user_id and username?
-//   //if not, put them there!
-//   if(!result.user_id) { 
-//     result.user_id = post.user_id
-//     result.username = post.username
-//   }
-//   result.posts.push({
-//     post_id: post.post_id,
-//     contents: post.contents
-//   })
-// }
+  // for (let post of rows) {
+  //   //does result have user_id and username?
+  //   //if not, put them there!
+  //   if (!result.user_id) {
+  //     result.user_id = post.user_id;
+  //     result.username = post.username;
+  //   }
+  //   if (post.post_id) {
+  //     result.posts.push({
+  //       post_id: post.post_id,
+  //       contents: post.contents,
+  //     });
+  //   }
+  // }
 
-// return result
+  // return result;
 
-// select 
-//     u.id as user_id,
-//     contents,
-//     username,
-//     p.id as post_id
-// from users u
-// left join posts p
-// on p.user_id = u.id
+  const result = {
+    username: rows[0].username,
+    user_id: rows[0].user_user_id,
+    posts: rows[0].post_id ? rows.map(row => ({ post_id: row.post_id, contents: row.contents })) : []
+  }
+
+  
+  return result
+
+  // select
+  //     u.id as user_id,
+  //     contents,
+  //     username,
+  //     p.id as post_id
+  // from users u
+  // left join posts p
+  // on p.user_id = u.id
   /*
     Improve so it resolves this structure:
 
